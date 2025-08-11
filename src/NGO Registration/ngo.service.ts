@@ -9,7 +9,7 @@ export class NGOService {
         private prisma: PrismaService
     ) { }
     async registerNGO(dto: NGORegisterDto) {
-        const existingNGO = await this.prisma.ngo.findFirst({
+        const existingNGO = await this.prisma.ngoProfile.findFirst({
             where: {
                 name: dto.name,
             }
@@ -20,7 +20,7 @@ export class NGOService {
         }
         try {
 
-            const NGO = await this.prisma.ngo.create({
+            const NGO = await this.prisma.ngoProfile.create({
                 data: {
                     name: dto.name,
                     type: dto.type,

@@ -25,8 +25,8 @@ model User {
   userName  String   @unique
   roleId    Int
 
-  role Role  @relation(fields: [roleId], references: [id])
-  ngo_profile  ngoProfile[]
+  role        Role         @relation(fields: [roleId], references: [id])
+  ngo_profile ngoProfile?
 }
 
 model ngoProfile {
@@ -44,7 +44,7 @@ model ngoProfile {
   no_Of_Staff         Int
   no_Of_beneficiaries Int
   profileCreated      User     @relation(fields: [creatorId], references: [id])
-  creatorId            Int
+  creatorId           Int @unique
 }
 
 model Permission {

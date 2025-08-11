@@ -30,7 +30,8 @@ export class NGOService {
                     state: dto.state,
                     city: dto.city,
                     no_Of_Staff: dto.no_Of_Staff,
-                    no_Of_beneficiaries: dto.no_Of_beneficiaries
+                    no_Of_beneficiaries: dto.no_Of_beneficiaries,
+                    creatorId:dto.creatorId
                 }
             })
             return {

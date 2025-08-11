@@ -40,7 +40,9 @@ export class NGORegisterDto {
     @IsNotEmpty()
     no_Of_beneficiaries: number
 
-
+    @IsInt()
+    @IsNotEmpty()
+    creatorId: number
 
 
 

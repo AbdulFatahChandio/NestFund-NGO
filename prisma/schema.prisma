@@ -25,10 +25,11 @@ model User {
   userName  String   @unique
   roleId    Int
 
-  role Role @relation(fields: [roleId], references: [id])
+  role Role  @relation(fields: [roleId], references: [id])
+  ngo_profile  ngoProfile[]
 }
 
-model ngo {
+model ngoProfile {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -42,6 +43,8 @@ model ngo {
   city                String
   no_Of_Staff         Int
   no_Of_beneficiaries Int
+  profileCreated      User     @relation(fields: [creatorId], references: [id])
+  creatorId            Int
 }
 
 model Permission {

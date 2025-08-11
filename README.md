@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
@@ -96,3 +97,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+=======
+# NestFund-NGO
+NestFund NGO is a NestJS + Prisma + PostgreSQL platform for registering, managing, and tracking NGOs. Features include JWT auth, role-based access, staff &amp; beneficiary tracking, validation, and Docker support—built for secure, scalable, and efficient NGO data management.
+>>>>>>> e0eb57414bb227eff2616786e825647b950543fd

@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  userName  String   @unique
+  roleId    Int
+
+  role Role @relation(fields: [roleId], references: [id])
+}
+
+model ngo {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name                String   @unique
+  type                NGO_type @default(trust)
+  purpose             Purpose  @default(fund)
+  registration_ID     String
+  registered_Country  String
+  state               String
+  city                String
+  no_Of_Staff         Int
+  no_Of_beneficiaries Int
+}
+
+model Permission {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  module    String
+  key       String   @unique
+
+  RolePermission RolePermission[]
+}
+
+model Role {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+
+  User User[]
+
+  RolePermission RolePermission[]
+}
+
+model RolePermission {
+  roleId Int
+  role   Role @relation(fields: [roleId], references: [id])
+
+  permissionId Int
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+}
+
+enum NGO_type {
+  non_Profit
+  welfare
+  charitable
+  trust
+  society
+  company
+}
+
+enum Purpose {
+  education
+  fund
+  health
+  old_house
+  orphan_house
+  women_Empowerment
+  disaster
+  relief
+}

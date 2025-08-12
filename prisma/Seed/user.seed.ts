@@ -20,9 +20,7 @@ export async function seedUsers() {
     create: {
       email: "admin123@gmail.com",
       password: hashedPassword,
-      firstName: "Admin",
-      lastName: "Fatah",
-      userName: "admin",
+      name: "admin",
       roleId: adminRole.id
     }
   });

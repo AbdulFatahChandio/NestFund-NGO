@@ -2,6 +2,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { SignUpDto } from "./dto/signup-dto";
 import { SignInDto } from "./dto/signin-dto";
+import { RegisterNgoDto } from "./dto/ngo-registration.dto";
 
 @Controller('auth')
 export class AuthController {
@@ -18,4 +19,10 @@ export class AuthController {
     signin(@Body() dto: SignInDto) {
         return this.authService.signin(dto)
     }
+
+    @Post('/register-ngo')
+    registerNGO(@Body() dto: RegisterNgoDto) {
+        return this.authService.registerNGO(dto)
+    }
+
 }

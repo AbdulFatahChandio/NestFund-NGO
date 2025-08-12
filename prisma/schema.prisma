@@ -20,12 +20,10 @@ model User {
   updatedAt DateTime @updatedAt
   email     String   @unique
   password  String
-  firstName String
-  lastName  String
-  userName  String   @unique
+  name      String
   roleId    Int
 
-  role        Role         @relation(fields: [roleId], references: [id])
+  role        Role        @relation(fields: [roleId], references: [id])
   ngo_profile ngoProfile?
 }
 
@@ -34,17 +32,16 @@ model ngoProfile {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name                String   @unique
   type                NGO_type @default(trust)
   purpose             Purpose  @default(fund)
-  registration_ID     String
+  registration_ID     String   @unique
   registered_Country  String
   state               String
   city                String
   no_Of_Staff         Int
   no_Of_beneficiaries Int
   profileCreated      User     @relation(fields: [creatorId], references: [id])
-  creatorId           Int @unique
+  creatorId           Int      @unique
 }
 
 model Permission {

@@ -19,22 +19,10 @@ export class SignUpDto {
   @IsNotEmpty()
   @MinLength(4)
   @MaxLength(20)
-  firstName: string
+  name: string
 
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  @MinLength(4)
-  @MaxLength(20)
-  lastName: string
-
-  @IsString()
-  @IsOptional()
-  @MinLength(4)
-  @MaxLength(20)
-  userName: string
-
- @IsInt()
- @IsNotEmpty()
-  roleId:number
+  roleId: number
 
 }

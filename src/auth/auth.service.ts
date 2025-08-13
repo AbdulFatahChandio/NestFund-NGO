@@ -6,7 +6,7 @@ import * as bcrypt from "bcryptjs";
 import { SignInDto } from "./dto/signin-dto";
 import { JwtService } from "@nestjs/jwt";
 import { RegisterNgoDto } from "./dto/ngo-registration.dto";
-import e from "express";
+import { updateNgoStatusDto } from "./dto/ngo-Status-Update.dto";
 
 @Injectable()
 export class AuthService {
@@ -97,7 +97,7 @@ export class AuthService {
             data: {
                 id: existingUser?.id,
                 email: existingUser?.email,
-                name:existingUser?.name,
+                name: existingUser?.name,
                 token: await this.generate_JWT(existingUser.id, existingUser.email)
             },
         }
@@ -106,20 +106,26 @@ export class AuthService {
     async registerNGO(dto: RegisterNgoDto) {
         try {
             const role = await this.prisma.role.findUnique({
-                where: { id: dto.roleId }
+                where: {
+                    id: dto.roleId
+                }
             });
             if (!role) {
                 throw new BadRequestException('Invalid role provided');
             }
 
             const existingUser = await this.prisma.user.findUnique({
-                where: { email: dto.email }
+                where: {
+                    email: dto.email
+                }
             });
             if (existingUser) {
                 throw new ForbiddenException('Email already exists');
             }
             const existingNGO = await this.prisma.ngoProfile.findUnique({
-                where: { registration_ID: dto.registration_ID }
+                where: {
+                    registrationID: dto.registrationID
+                }
             });
             if (existingNGO) {
                 throw new BadRequestException('NGO already registered with this registration ID');
@@ -147,27 +153,28 @@ export class AuthService {
                     data: {
                         type: dto.type,
                         purpose: dto.purpose,
-                        registration_ID: dto.registration_ID,
-                        registered_Country: dto.registered_Country,
+                        registrationID: dto.registrationID,
+                        registeredCountry: dto.registeredCountry,
                         state: dto.state,
                         city: dto.city,
-                        no_Of_Staff: dto.no_Of_Staff,
-                        no_Of_beneficiaries: dto.no_Of_beneficiaries,
-                        creatorId: user.id
+                        noOfStaff: dto.noOfStaff,
+                        noOfBeneficiaries: dto.noOfBeneficiaries,
+                        creatorId: user.id,
                     },
                     select: {
                         type: true,
                         purpose: true,
-                        registration_ID: true,
-                        registered_Country: true,
+                        registrationID: true,
+                        registeredCountry: true,
                         state: true,
                         city: true,
-                        no_Of_Staff: true,
-                        no_Of_beneficiaries: true
+                        noOfStaff: true,
+                        noOfBeneficiaries: true,
+                        ngoStatus:true
                     }
                 });
 
-                return { ...user, ngo_profile: ngo };
+                return { ...user, ngoProfile: ngo };
             });
 
             return {
@@ -183,10 +190,102 @@ export class AuthService {
         }
     }
 
+    async getAllNGO() {
+        try {
+            const ngos = await this.prisma.user.findMany({
+                where: {
+                    ngoProfile: {
+                        isNot: null
+                    }
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    role: {
+                        select: { name: true }
+                    },
+                    ngoProfile: {
+                        select: {
+                            type: true,
+                            purpose: true,
+                            registrationID: true,
+                            registeredCountry: true,
+                            state: true,
+                            city: true,
+                            noOfStaff: true,
+                            noOfBeneficiaries: true
+                        }
+                    }
+                }
+            });
+
+            return {
+                message: 'NGOs fetched successfully',
+                status: 'success',
+                data: ngos
+            };
+
+        } catch (error) {
+            console.error('Error fetching NGOs:', error);
+            throw new BadRequestException(error.message || 'An error occurred while fetching NGOs');
+        }
+    }
+
+    async updateNgoStatus(dto: updateNgoStatusDto) {
+        const existingNGO = await this.prisma.user.findUnique({
+            where: {
+                email: dto.email
+            }
+        });
+        if (!existingNGO) {
+            throw new ForbiddenException('NGO does not existed');
+        }
+        const updateNGOStatus = await this.prisma.user.update({
+            where: {
+                email: dto.email
+            },
+            data: {
+                ngoProfile: {
+                    update: {
+                        ngoStatus: dto.ngoStatus
+                    }
+                }
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role: {
+                    select: { name: true }
+                },
+                ngoProfile: {
+                    select: {
+                        type: true,
+                        purpose: true,
+                        registrationID: true,
+                        registeredCountry: true,
+                        state: true,
+                        city: true,
+                        noOfStaff: true,
+                        noOfBeneficiaries: true,
+                        ngoStatus:true
+                    }
+                }
+            }
+
+        })
+        return {
+            message: 'NGO status updated successfully',
+            status: 'success',
+            data: updateNGOStatus
+        };
+    }
+
     async generate_JWT(
         userId: number,
         email: string
-    ): Promise<{ access_Token: string }> {
+    ): Promise<{ accessToken: string }> {
         const payload = {
             sub: userId,
             email
@@ -200,7 +299,7 @@ export class AuthService {
             }
         );
         return {
-            access_Token: token
+            accessToken: token
         }
     }
 }

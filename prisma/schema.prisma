@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -23,8 +22,8 @@ model User {
   name      String
   roleId    Int
 
-  role        Role        @relation(fields: [roleId], references: [id])
-  ngo_profile ngoProfile?
+  role       Role        @relation(fields: [roleId], references: [id])
+  ngoProfile ngoProfile?
 }
 
 model ngoProfile {
@@ -32,16 +31,17 @@ model ngoProfile {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  type                NGO_type @default(trust)
-  purpose             Purpose  @default(fund)
-  registration_ID     String   @unique
-  registered_Country  String
-  state               String
-  city                String
-  no_Of_Staff         Int
-  no_Of_beneficiaries Int
-  profileCreated      User     @relation(fields: [creatorId], references: [id])
-  creatorId           Int      @unique
+  type              NgoType @default(trust)
+  purpose           Purpose @default(fund)
+  registrationID    String  @unique
+  registeredCountry String
+  state             String
+  city              String
+  noOfStaff         Int
+  noOfBeneficiaries Int
+  ngoStatus         Status? @default(pending)
+  profileCreated    User    @relation(fields: [creatorId], references: [id])
+  creatorId         Int     @unique
 }
 
 model Permission {
@@ -76,8 +76,8 @@ model RolePermission {
   @@id([roleId, permissionId])
 }
 
-enum NGO_type {
-  non_Profit
+enum NgoType {
+  nonProfit
   welfare
   charitable
   trust
@@ -89,9 +89,15 @@ enum Purpose {
   education
   fund
   health
-  old_house
-  orphan_house
-  women_Empowerment
+  oldHouse
+  orphanHouse
+  womenEmpowerment
   disaster
   relief
+}
+
+ enum Status {
+  pending
+  approved
+  rejected
 }

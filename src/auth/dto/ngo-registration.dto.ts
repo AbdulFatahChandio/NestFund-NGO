@@ -1,6 +1,9 @@
+import { NgoType, Purpose } from "@prisma/client";
+import { IsEmail, IsEnum, IsInt, IsNotEmpty, IsString, IsStrongPassword, MaxLength, Min, MinLength } from "class-validator";
 
-import { NGO_type, Purpose } from "@prisma/client";
-import { IsEmail, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, IsStrongPassword, MaxLength, Min, MinLength } from "class-validator";
+
+
+
 
 export class RegisterNgoDto {
     @IsEmail()
@@ -28,9 +31,9 @@ export class RegisterNgoDto {
     @IsNotEmpty()
     roleId: number
 
-    @IsEnum(NGO_type)
+    @IsEnum(NgoType)
     @IsNotEmpty()
-    type: NGO_type
+    type: NgoType
 
     @IsEnum(Purpose)
     @IsNotEmpty()
@@ -38,11 +41,11 @@ export class RegisterNgoDto {
 
     @IsString()
     @IsNotEmpty()
-    registration_ID: string
+    registrationID: string
 
     @IsString()
     @IsNotEmpty()
-    registered_Country: string
+    registeredCountry: string
 
     @IsString()
     @IsNotEmpty()
@@ -55,12 +58,12 @@ export class RegisterNgoDto {
     @IsInt()
     @IsNotEmpty()
     @Min(1)
-    no_Of_Staff: number
+    noOfStaff: number
 
     @IsInt()
     @Min(1)
     @IsNotEmpty()
-    no_Of_beneficiaries: number
+    noOfBeneficiaries: number
 
     @IsInt()
     @IsNotEmpty()

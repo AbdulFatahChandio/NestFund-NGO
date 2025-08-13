@@ -7,6 +7,7 @@ import { SignInDto } from "./dto/signin-dto";
 import { JwtService } from "@nestjs/jwt";
 import { RegisterNgoDto } from "./dto/ngo-registration.dto";
 import { updateNgoStatusDto } from "./dto/ngo-Status-Update.dto";
+import { User } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
@@ -170,7 +171,7 @@ export class AuthService {
                         city: true,
                         noOfStaff: true,
                         noOfBeneficiaries: true,
-                        ngoStatus:true
+                        ngoStatus: true
                     }
                 });
 
@@ -269,7 +270,7 @@ export class AuthService {
                         city: true,
                         noOfStaff: true,
                         noOfBeneficiaries: true,
-                        ngoStatus:true
+                        ngoStatus: true
                     }
                 }
             }
@@ -279,6 +280,80 @@ export class AuthService {
             message: 'NGO status updated successfully',
             status: 'success',
             data: updateNGOStatus
+        };
+    }
+
+    // async findMe(currentUser: User) {
+    //     return this.prisma.user.findUnique({
+    //         where: { id: currentUser.id },
+    //         select: {
+    //             id: true,
+    //             name: true,
+    //             email: true,
+    //             roleId: true,
+    //             role: {
+    //                 select: {
+    //                     name: true
+    //                 },
+    //             },
+
+    //             permission: {
+    //                 select: {
+    //                     id: true,
+    //                     name: true,
+    //                     key: true,
+    //                     module: true,
+    //                 },
+    //             },
+
+
+    //         },
+    //     });
+    // }
+
+    async findMe(currentUser: User) {
+        const aboutME = await this.prisma.user.findUnique({
+            where: { id: currentUser.id },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role: {
+                    select: {
+                        id: true,
+                        name: true,
+                        RolePermission: {
+                            select: {
+                                permission: {
+                                    select: {
+                                        key: true,
+                                        name: true,
+                                        module: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        const permissions =
+            aboutME?.role?.RolePermission?.map((rp) => rp.permission.key) ?? [];
+
+        // Safely remove RolePermission if role exists
+        let roleWithoutPermissions = aboutME?.role
+            ? { id: aboutME.role.id, name: aboutME.role.name }
+            : undefined;
+
+
+        return {
+            aboutME: {
+                ...aboutME,
+                role: roleWithoutPermissions, // Role without RolePermission
+            },
+            permissions,
+            // aboutME
         };
     }
 

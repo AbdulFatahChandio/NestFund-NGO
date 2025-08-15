@@ -1,10 +1,6 @@
 import { NgoType, Purpose } from "@prisma/client";
 import { IsEmail, IsEnum, IsInt, IsNotEmpty, IsString, IsStrongPassword, MaxLength, Min, MinLength } from "class-validator";
 
-
-
-
-
 export class RegisterNgoDto {
     @IsEmail()
     @IsNotEmpty()

@@ -21,7 +21,7 @@ export class AuthService {
     }
 
 
-    async signup(dto: SignUpDto) {
+    async signup(dto: SignUpDto) { 
         try {
 
             const role = await this.prisma.role.findUnique({
@@ -283,34 +283,6 @@ export class AuthService {
         };
     }
 
-    // async findMe(currentUser: User) {
-    //     return this.prisma.user.findUnique({
-    //         where: { id: currentUser.id },
-    //         select: {
-    //             id: true,
-    //             name: true,
-    //             email: true,
-    //             roleId: true,
-    //             role: {
-    //                 select: {
-    //                     name: true
-    //                 },
-    //             },
-
-    //             permission: {
-    //                 select: {
-    //                     id: true,
-    //                     name: true,
-    //                     key: true,
-    //                     module: true,
-    //                 },
-    //             },
-
-
-    //         },
-    //     });
-    // }
-
     async findMe(currentUser: User) {
         const aboutME = await this.prisma.user.findUnique({
             where: { id: currentUser.id },
@@ -338,22 +310,9 @@ export class AuthService {
             },
         });
 
-        const permissions =
-            aboutME?.role?.RolePermission?.map((rp) => rp.permission.key) ?? [];
-
-        // Safely remove RolePermission if role exists
-        let roleWithoutPermissions = aboutME?.role
-            ? { id: aboutME.role.id, name: aboutME.role.name }
-            : undefined;
-
 
         return {
-            aboutME: {
-                ...aboutME,
-                role: roleWithoutPermissions, // Role without RolePermission
-            },
-            permissions,
-            // aboutME
+            aboutME
         };
     }
 

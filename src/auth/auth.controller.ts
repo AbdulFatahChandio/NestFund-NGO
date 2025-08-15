@@ -7,8 +7,8 @@ import { AuthGuard } from "@nestjs/passport";
 import { updateNgoStatusDto } from "./dto/ngo-Status-Update.dto";
 import { GetUser } from "./decorater/get-user.decorater";
 import * as client from "@prisma/client";
-
-
+import { PermissionsGuard } from "./Guard/permission-guard";
+import { Permissions } from "./decorater/can-permission.decorater";
 
 @Controller('auth')
 export class AuthController {
@@ -31,15 +31,16 @@ export class AuthController {
         return this.authService.registerNGO(dto)
     }
 
-    @UseGuards(AuthGuard('jwt'))
-    @Get('/get-all-ngo')
+    @Get("/get-all-ngo")
+    @UseGuards(AuthGuard("jwt"),PermissionsGuard)
+    @Permissions("ngo-read")
     getAllNGO() {
         return this.authService.getAllNGO()
     }
 
     @UseGuards(AuthGuard('jwt'))
     @Get('/admin-findMe')
-    findMe(@GetUser() currentUser:client.User) {
+    findMe(@GetUser() currentUser: client.User) {
         return this.authService.findMe(currentUser);
     }
 
@@ -48,6 +49,4 @@ export class AuthController {
     updateNgoStatus(@Body() dto: updateNgoStatusDto) {
         return this.authService.updateNgoStatus(dto)
     }
-
-
 }

@@ -30,7 +30,6 @@ export async function seedRolePermission() {
         }
     });
 
-
     await prisma.rolePermission.upsert({
         where: {
             roleId_permissionId: { 

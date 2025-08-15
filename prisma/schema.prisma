@@ -101,3 +101,7 @@ enum Purpose {
   approved
   rejected
 }
+
+// enum Role{
+//   donor
+// }

@@ -4,13 +4,13 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
-// import { NGOModule } from './NGO Registration/ngo.module';
 import { RoleModule } from './role/role.module';
+import { CampaignModule } from './Campaign/campaign.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal:true
-  }),PrismaModule,AuthModule,RoleModule],
+  }),PrismaModule,AuthModule,RoleModule,CampaignModule],
   controllers: [AppController],
   providers: [AppService],
 })

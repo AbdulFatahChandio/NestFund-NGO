@@ -16,14 +16,10 @@ export class AuthService {
         public config: ConfigService,
         public jwt: JwtService
 
-    ) {
-
-    }
-
+    ) { }
 
     async signup(dto: SignUpDto) { 
         try {
-
             const role = await this.prisma.role.findUnique({
                 where: {
                     id: dto.roleId

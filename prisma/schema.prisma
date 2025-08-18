@@ -76,6 +76,19 @@ model RolePermission {
   @@id([roleId, permissionId])
 }
 
+model Campaign {
+  id              Int            @id @default(autoincrement())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  title           String
+  description     String
+  goalAmount      Float // Target fundraising amount
+  collectedAmount Float          @default(0) // Auto-updated from donations
+  startDate       DateTime
+  endDate         DateTime?
+  status          CampaignStatus @default(pending)
+}
+
 enum NgoType {
   nonProfit
   welfare
@@ -96,10 +109,17 @@ enum Purpose {
   relief
 }
 
- enum Status {
+enum Status {
   pending
   approved
   rejected
+}
+
+enum CampaignStatus {
+  pending 
+  active 
+  completed 
+  cancelled 
 }
 
 // enum Role{

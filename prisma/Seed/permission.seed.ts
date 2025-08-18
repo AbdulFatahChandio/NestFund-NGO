@@ -1,48 +1,35 @@
 import { PrismaClient } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
 export async function seedPermissions() {
     // console.log('Seed Permission Seed ', seedPermissions)
-
-    await prisma.permission.upsert({
-        where: {
-            key: "ngo-read"
-        },
-        update: {},
-        create: {
+    const permissions = [
+        {
             module: "ngo",
             name: "read",
             key: "ngo-read"
         },
-
-    });
-
-
-    await prisma.permission.upsert({
-        where: {
-            key: "ngo-update"
-        },
-        update: {},
-        create: {
+        {
             module: "ngo",
             name: "update",
             key: "ngo-update"
         },
-
-    });
-
-    await prisma.permission.upsert({
-        where: {
-            key: "ngo-delete"
-        },
-        update: {},
-        create: {
+        {
             module: "ngo",
             name: "delete",
             key: "ngo-delete"
-        },
-
-    });
-
+        }
+    ]
+    console.log('permission', permissions)
+    for (const Perm of permissions) {
+        await prisma.permission.upsert({
+            where: {
+                key: Perm.key
+            },
+            update: {},
+            create: Perm
+        });
+    }
     console.log("Permission seeded executed :");
 }

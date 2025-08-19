@@ -1,7 +1,8 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Body, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateCampaignDto } from "./dto/create-campaign.dto";
 import { GetSingleNGODto } from "./dto/get-single-ngo.dto";
+import { UpdateCampaignStatusDto } from "./dto/update-campaign.dto";
 
 @Injectable()
 export class CampaignService {
@@ -74,11 +75,11 @@ export class CampaignService {
         }
     }
 
-    async getCampaignById(dto : GetSingleNGODto) {
+    async getCampaignById(dto: GetSingleNGODto) {
         try {
             const campaign = await this.prisma.campaign.findUnique({
-                where: { 
-                    id:dto.id
+                where: {
+                    id: dto.id
                 },
                 include: {
                     ngoProfile: {
@@ -104,9 +105,51 @@ export class CampaignService {
                 campaign
             };
         } catch (error) {
-            
+
             throw new BadRequestException(error.message || 'An error occurred while fetching campaign');
         }
+    }
+
+
+    async updateCampaignStatus(dto: UpdateCampaignStatusDto) {
+        
+        try{
+        const existingCampaign = await this.prisma.campaign.findUnique({
+            where: {
+                id: dto.id,
+            },
+            include: {
+                ngoProfile: true,
+            },
+        });
+        console.log('existingCampaign', existingCampaign)
+
+        if (!existingCampaign) {
+            throw new ForbiddenException('Campaign does not exist');
+        }
+
+        
+            const updatedCampaign = await this.prisma.campaign.update({
+                where: { 
+                    id: dto.id 
+                },
+                data: { 
+                    status: dto.status 
+                },
+                include: {
+                    ngoProfile: {
+                        select: { id: true, type: true, purpose: true, registeredCountry: true, state: true, city: true, ngoStatus: true },
+                    },
+                },
+            });
+            return updatedCampaign;
+        } catch (error) {
+            if (error.code === 'P2025') {
+                throw new Error('Campaign not found');
+            }
+            throw error;
+        }
+
     }
 
 }

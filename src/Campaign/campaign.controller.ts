@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
 import { CampaignService } from "./campaign.service";
 import { CreateCampaignDto } from "./dto/create-campaign.dto";
 import { GetSingleNGODto } from "./dto/get-single-ngo.dto";
+import { UpdateCampaignStatusDto } from "./dto/update-campaign.dto";
 
-@Controller('campaigns')
+@Controller('campaign')
 export class CampaignController {
     constructor(private campaignService: CampaignService) { }
 
@@ -23,5 +24,10 @@ export class CampaignController {
         return this.campaignService.getCampaignById(dto);
     }
 
-
+    @Patch('update-status')
+    async updateCampaignStatus(@Body() dto:UpdateCampaignStatusDto){
+        return this.campaignService.updateCampaignStatus(dto)
+    }
+    
+    
 }

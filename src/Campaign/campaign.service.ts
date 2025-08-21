@@ -95,7 +95,6 @@ export class CampaignService {
                     },
                 },
             });
-            console.log('campaign', campaign)
 
             if (!campaign) {
                 throw new NotFoundException(`Campaign with ID ${dto.id} not found`);
@@ -122,7 +121,6 @@ export class CampaignService {
                 ngoProfile: true,
             },
         });
-        console.log('existingCampaign', existingCampaign)
 
         if (!existingCampaign) {
             throw new ForbiddenException('Campaign does not exist');

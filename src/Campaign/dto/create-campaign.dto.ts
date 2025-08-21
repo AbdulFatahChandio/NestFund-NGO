@@ -20,11 +20,12 @@ export class CreateCampaignDto {
 
     @IsDateString()
     @IsNotEmpty()
-    startDate: Date;
+    startDate: string;
 
     @IsDateString()
     @IsOptional()
-    endDate: Date;
+    endDate?: string;
+
 
     @IsEnum(CampaignStatus)
     @IsNotEmpty()

@@ -19,7 +19,28 @@ export async function seedPermissions() {
             module: "ngo",
             name: "delete",
             key: "ngo-delete"
+        },
+        {
+            module: "campaign",
+            name: "create",
+            key: "campaign-create"
+        },
+        {
+            module: "campaign",
+            name: "read",
+            key: "campaign-read"
+        },
+        {
+            module: "campaign",
+            name: "update",
+            key: "campaign-update"
+        },
+        {
+            module: "campaign",
+            name: "delete",
+            key: "campaign-delete"
         }
+
     ]
     console.log('permission', permissions)
     for (const Perm of permissions) {

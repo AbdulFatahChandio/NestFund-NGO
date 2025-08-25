@@ -61,7 +61,5 @@ export class RegisterNgoDto {
     @IsNotEmpty()
     noOfBeneficiaries: number
 
-    @IsInt()
-    @IsNotEmpty()
-    creatorId: number
+   
 }

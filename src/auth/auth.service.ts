@@ -167,7 +167,8 @@ export class AuthService {
                         city: true,
                         noOfStaff: true,
                         noOfBeneficiaries: true,
-                        ngoStatus: true
+                        ngoStatus: true,
+                        creatorId:true
                     }
                 });
 
@@ -311,7 +312,7 @@ export class AuthService {
             aboutME
         };
     }
-
+    
     async generate_JWT(
         userId: number,
         email: string

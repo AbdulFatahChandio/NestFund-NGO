@@ -3,7 +3,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export async function seedPermissions() {
-    // console.log('Seed Permission Seed ', seedPermissions)
     const permissions = [
         {
             module: "ngo",
@@ -39,7 +38,33 @@ export async function seedPermissions() {
             module: "campaign",
             name: "delete",
             key: "campaign-delete"
+        },
+        {
+            module: "permission",
+            name: "delete",
+            key: "delete-permission"
+        },
+        {
+            module: "donation",
+            name: "read",
+            key: "read-donation"
+        },
+        {
+            module: "donation",
+            name: "create",
+            key: "create-donation"
+        },
+        {
+            module: "donation",
+            name: "update",
+            key: "update-donation"
+        },
+        {
+            module: "donation",
+            name: "delete",
+            key: "delete-donation"
         }
+
 
     ]
     console.log('permission', permissions)

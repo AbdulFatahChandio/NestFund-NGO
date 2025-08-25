@@ -24,6 +24,7 @@ model User {
 
   role       Role        @relation(fields: [roleId], references: [id])
   ngoProfile ngoProfile?
+  Donation   Donation[]
 }
 
 model ngoProfile {
@@ -90,7 +91,29 @@ model Campaign {
   endDate         DateTime?
   status          CampaignStatus @default(pending)
   ngoId           Int
-  ngoProfile     ngoProfile     @relation(fields: [ngoId], references: [id])
+  ngoProfile      ngoProfile     @relation(fields: [ngoId], references: [id])
+  Donation        Donation[]
+}
+
+model Donation {
+  id        Int            @id @default(autoincrement())
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  amount    Decimal        @db.Decimal(15, 2) 
+  currency  String         @default("usd") 
+  status    DonationStatus @default(pending)
+
+  donorId Int?
+  donor   User? @relation(fields: [donorId], references: [id])
+
+  campaignId Int
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+}
+
+enum DonationStatus {
+  pending
+  succeeded
+  failed
 }
 
 enum NgoType {

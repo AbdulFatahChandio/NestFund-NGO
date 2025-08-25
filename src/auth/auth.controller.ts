@@ -37,7 +37,7 @@ export class AuthController {
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Get('/admin-findMe')
+    @Get('/findMe')
     findMe(@GetUser() currentUser: client.User) {
         return this.authService.findMe(currentUser);
     }

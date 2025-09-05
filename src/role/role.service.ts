@@ -8,11 +8,11 @@ export class RoleService {
         private prisma: PrismaService
     ) {}
 
-    async createRole(dto: CreateRoleDto) {
+    async createRole(createRoleDto: CreateRoleDto) {
         try {
             const role = await this.prisma.role.create({
                 data:{
-                    name:dto.name
+                    name:createRoleDto.name
                 }
             })
             return{

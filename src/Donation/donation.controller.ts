@@ -15,8 +15,10 @@ export class DonationController {
     @UseGuards(AuthGuard("jwt"), PermissionsGuard)
     @Permissions("create-donation")
     @Post('/create')
-    async createDonation(@Body() dto: CreateDonationDto, @GetUser() currentUser: client.User) {
-        return this.donationService.createDonation(dto , currentUser);
+    async createDonation(
+        @Body() dto: CreateDonationDto,
+        @GetUser() currentUser: client.User) {
+        return this.donationService.createDonation(dto, currentUser);
     }
 
 

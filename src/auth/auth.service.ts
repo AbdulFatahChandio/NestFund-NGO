@@ -1,5 +1,5 @@
 import { BadRequestException, ForbiddenException, Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "prisma/prisma.service";
 import { SignUpDto } from "./dto/signup-dto";
 import { ConfigService } from "@nestjs/config";
 import * as bcrypt from "bcryptjs";

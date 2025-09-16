@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { CreateDonationDto } from "./dto/create-donation.dto";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "prisma/prisma.service";
 import { User } from "generated/prisma";
 import Stripe from "stripe";
 import { config } from "process";

@@ -1,5 +1,5 @@
 import { BadRequestException, Body, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "prisma/prisma.service";
 import { CreateCampaignDto } from "./dto/create-campaign.dto";
 import { GetSingleNGODto } from "./dto/get-single-ngo.dto";
 import { UpdateCampaignStatusDto } from "./dto/update-campaign.dto";
@@ -14,18 +14,11 @@ export class CampaignService {
     async createCampaign(dto: CreateCampaignDto) {
         try {
             const existingNGO = await this.prisma.user.findUnique({
-                where: {
-                    email: dto.email,
-                },
-                include: {
-                    ngoProfile: true,
-                },
+                where: { email: dto.email },
+                include: { ngoProfile: true },
             });
 
-            if (!existingNGO) {
-                throw new ForbiddenException('NGO does not exist');
-            }
-
+            if (!existingNGO) { throw new ForbiddenException('NGO does not exist'); }
             if (existingNGO.ngoProfile?.ngoStatus !== "approved") {
                 throw new ForbiddenException("NGO is not approved");
             }
@@ -111,28 +104,28 @@ export class CampaignService {
 
 
     async updateCampaignStatus(dto: UpdateCampaignStatusDto) {
-        
-        try{
-        const existingCampaign = await this.prisma.campaign.findUnique({
-            where: {
-                id: dto.id,
-            },
-            include: {
-                ngoProfile: true,
-            },
-        });
 
-        if (!existingCampaign) {
-            throw new ForbiddenException('Campaign does not exist');
-        }
-
-        
-            const updatedCampaign = await this.prisma.campaign.update({
-                where: { 
-                    id: dto.id 
+        try {
+            const existingCampaign = await this.prisma.campaign.findUnique({
+                where: {
+                    id: dto.id,
                 },
-                data: { 
-                    status: dto.status 
+                include: {
+                    ngoProfile: true,
+                },
+            });
+
+            if (!existingCampaign) {
+                throw new ForbiddenException('Campaign does not exist');
+            }
+
+
+            const updatedCampaign = await this.prisma.campaign.update({
+                where: {
+                    id: dto.id
+                },
+                data: {
+                    status: dto.status
                 },
                 include: {
                     ngoProfile: {

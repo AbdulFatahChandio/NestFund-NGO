@@ -1,10 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import InjectSwagger from './core/injectors/swagger.injector';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
+
+  // GLOBAL PREFIX + API VERSIONING ENABLED
+  app.setGlobalPrefix('api');
+  app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
+
+  // INJECT SWAGGER CONFIGURATIONS
+  InjectSwagger(app);
+
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true, // Automatically transforms incoming payloads to DTO instances

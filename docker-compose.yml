@@ -1,23 +1,81 @@
-version: '3.8'
+version: '3.9'
 services:
-  NGO-db:
-    image: postgres:13.5
+  # NestFund NGO Development Service
+  ngo-dev:
+    container_name: ${NEST_FUND_DEV_CONTAINER}
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env.development
     ports:
-      - "5435:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: NestFund_NGO
+      - "${PORT}:3000"
     volumes:
-      - ngo-db-data:/var/lib/postgresql/data
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+    profiles:
+      - dev
     networks:
       - NGO
+
+    # NestFund NGO Production Service
+  ngo-prod:
+    container_name: ${NEST_FUND_PROD_CONTAINER}
+    build: 
+      context: .
+      dockerfile: Dockerfile.prod
+    env_file:
+      - .env.production
+    ports:
+      - "${PORT}:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+    profiles:
+      - prod
+    networks:
+      - NGO
+
+  # Database Service (PostgreSQL)
+  postgres:
+    container_name: ${POSTGRES_CONTAINER_NAME}
+    image: postgres:13.5
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: NestFund_NGO
+    volumes:
+      - postgres-ngo-db-data:/var/lib/postgresql/data
+    networks:
+      - NGO
+
+  # pgAdmin Service
+  pgadmin:
+    container_name: ${PG_ADMIN_CONTAINER_NAME}
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - "${PG_ADMIN_PORT}:${PG_ADMIN_EXPOSE_PORT}"
+    volumes:
+      - pgadmin-ngo-db-data:/var/lib/pgadmin/data
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PG_ADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PG_ADMIN_PASSWORD}
+    networks:
+      - NGO
+
 networks:
-      NGO:
-        driver: bridge
+  NGO:
+    driver: bridge
 volumes:
-  ngo-db-data: {}
-
-
-
-      
+  postgres-ngo-db-data: {}
+  pgadmin-ngo-db-data: {}

@@ -1,6 +1,6 @@
 version: '3.9'
 services:
-  # NestFund NGO Development Service
+  # Dev Service
   ngo-dev:
     container_name: ${NEST_FUND_DEV_CONTAINER}
     build: 
@@ -15,12 +15,13 @@ services:
       - /app/node_modules
     depends_on:
       - postgres
+      - pgadmin
     profiles:
       - dev
     networks:
       - NGO
 
-    # NestFund NGO Production Service
+  # Prod Service
   ngo-prod:
     container_name: ${NEST_FUND_PROD_CONTAINER}
     build: 
@@ -35,12 +36,13 @@ services:
       - /app/node_modules
     depends_on:
       - postgres
+      - pgadmin
     profiles:
       - prod
     networks:
       - NGO
 
-  # Database Service (PostgreSQL)
+  # Database (Postgres)
   postgres:
     container_name: ${POSTGRES_CONTAINER_NAME}
     image: postgres:13.5
@@ -53,10 +55,13 @@ services:
       POSTGRES_DB: NestFund_NGO
     volumes:
       - postgres-ngo-db-data:/var/lib/postgresql/data
+    profiles:
+      - dev
+      - prod
     networks:
       - NGO
 
-  # pgAdmin Service
+  # pgAdmin
   pgadmin:
     container_name: ${PG_ADMIN_CONTAINER_NAME}
     image: dpage/pgadmin4
@@ -70,12 +75,16 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PG_ADMIN_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PG_ADMIN_PASSWORD}
+    profiles:
+      - dev
+      - prod
     networks:
       - NGO
 
 networks:
   NGO:
     driver: bridge
+
 volumes:
   postgres-ngo-db-data: {}
   pgadmin-ngo-db-data: {}

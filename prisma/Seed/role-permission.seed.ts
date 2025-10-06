@@ -6,15 +6,15 @@ export async function seedRolePermission() {
     const rolePerm = [
         {
             roleId: 1,
-            permissionId: [1, 2, 3, 5, 6, 7,8,10,12,13],
+            permissionId: [],
         },
         {
             roleId: 2,
-            permissionId: [1, 5,10,11],
+            permissionId: [],
         },
         {
             roleId: 3,
-            permissionId: [4, 5, 7,10,12,13]
+            permissionId: []
 
         }
     ];

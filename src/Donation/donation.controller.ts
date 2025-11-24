@@ -30,6 +30,7 @@ export class DonationController {
         @Body() dto: CreateDonationDto,
         @GetUser() currentUser: client.User
     ) {
+        //Returns Create of donation
         return this.donationService.createDonation(dto, currentUser);
     }
 }
